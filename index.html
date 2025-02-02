@@ -4,141 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MP3 Player</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon added -->
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            background: url('Background.png') no-repeat center center fixed; /* Set background image */
-            background-size: cover; /* Make background cover the entire screen */
-            color: #ffd700; /* Vibrant Gold */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .container {
-            width: 80%;
-            height: 80%;
-            text-align: center;
-            color: #ffd700; /* Vibrant Gold */
-            border-radius: 15px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0); /* Fully Transparent container */
-            z-index: 1;
-            transition: background 0.3s ease;
-        }
-
-        h1 {
-            font-size: 3rem;
-            color: #ffd700; /* Vibrant Gold */
-            margin: 20px 0;
-            z-index: 2;
-            letter-spacing: 1px;
-        }
-
-        .file-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: rgba(255, 215, 0, 0.2); /* Semi-transparent gold */
-            border-radius: 5px;
-            width: 80%;
-            backdrop-filter: blur(10px);
-            z-index: 2;
-        }
-
-        .file-info span {
-            word-break: break-word;
-            color: #ffd700;
-        }
-
-        .file-info button {
-            background: #ffd700; /* Vibrant Gold */
-            border: none;
-            color: #1d1d1d; /* Dark background for text */
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            z-index: 2;
-        }
-
-        .file-info button:hover {
-            background: #e6c200; /* Darker gold on hover */
-            transform: scale(1.1); /* Slightly enlarge button on hover */
-        }
-
-        #uploadButton {
-            background: #ffd700; /* Vibrant Gold */
-            border: none;
-            color: #1d1d1d; /* Dark background for text */
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px 0;
-            transition: background 0.3s ease, transform 0.2s ease;
-            z-index: 2;
-        }
-
-        #uploadButton:hover {
-            background: #e6c200; /* Darker gold on hover */
-            transform: scale(1.1); /* Slightly enlarge button on hover */
-        }
-
-        audio {
-            margin-top: 20px;
-            width: 80%;
-            border: none;
-            border-radius: 5px;
-            background-color: #b8963d; /* Dark Gold background for player */
-            color: #1d1d1d; /* Dark background for text */
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-            z-index: 2;
-            transition: background 0.3s ease;
-        }
-
-        audio::-webkit-media-controls-panel {
-            background-color: #b8963d; /* Dark Gold */
-            color: #ffd700;
-        }
-
-        audio::-webkit-media-controls-play-button {
-            background-color: #ffd700; /* Gold play button */
-        }
-
-        /* Smooth transitions for the entire page */
-        * {
-            transition: all 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                width: 90%;
-                height: auto;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .file-info, #uploadButton {
-                width: 100%;
-                font-size: 1rem;
-            }
-        }
-    </style>
+    <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container" id="mainContainer">
@@ -151,62 +19,19 @@
         </audio>
     </div>
 
+    <script src="js/script.js"></script>
     <script>
-        const uploadButton = document.getElementById('uploadButton');
-        const fileInput = document.getElementById('fileInput');
-        const fileContainer = document.getElementById('fileContainer');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const title = document.querySelector('title');
-        const mainContainer = document.getElementById('mainContainer');
-
-        let currentFile = null;
-
-        // Handle file upload
-        uploadButton.addEventListener('click', () => {
-            fileInput.click();
-        });
-
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                currentFile = file;
-
-                // Create file info display
-                fileContainer.innerHTML = '';
-                const fileInfo = document.createElement('div');
-                fileInfo.classList.add('file-info');
-
-                const fileName = document.createElement('span');
-                fileName.textContent = file.name;
-
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'X';
-                deleteButton.addEventListener('click', () => {
-                    fileContainer.innerHTML = '';
-                    audioPlayer.src = '';
-                    fileInput.value = null;
-                    currentFile = null;
-                    title.textContent = 'MP3 Player'; // Reset title when no file is selected
-                });
-
-                fileInfo.appendChild(fileName);
-                fileInfo.appendChild(deleteButton);
-                fileContainer.appendChild(fileInfo);
-
-                // Set audio source
-                const objectURL = URL.createObjectURL(file);
-                audioPlayer.src = objectURL;
-                audioPlayer.play();
-
-                // Change the title to the file name with ' l MP3 Player'
-                title.textContent = `${file.name.replace(/\.[^/.]+$/, '')} l MP3 Player`;
-
-                // Reset seek control
-                audioPlayer.addEventListener('loadedmetadata', () => {
-                    playbackRateControl.max = audioPlayer.duration;
-                });
-            }
-        });
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope: ', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Service Worker registration failed: ', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
